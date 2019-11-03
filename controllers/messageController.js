@@ -1,120 +1,193 @@
 const bodyParser = require("body-parser");
-// const jsdom = require("jsdom");
-// const { JSDOM } = jsdom;
-let data = [
+
+let conv = [
   {
     message: "hello, what's your name?"
   }
 ];
 
+let data = {
+  name: "",
+  numOfTrucks: "",
+  brands: [
+    {
+      brand: "volvo",
+      models: [
+        { model: "rx24", num: "2", engineSize: "3litres", axles: "2" },
+        { model: "444", num: "3", engineSize: "2000litres", axles: "30" }
+      ]
+    }
+  ],
+  monoBrand: true,
+  multiBrand: false
+};
+
+let brand;
+let model;
+let num;
+let engineSize;
+let axles;
+
+// data.brands[0].brand
+// data.brands[0].models
+//data.brands[0].models[0]  //first model
+// data.brands[0].models[0].model //first model model
+// data.brands[0].models[0].engineSize //first model engine size
+//data.brands[0].models[1] second model
+
 let urlencodedParser = bodyParser.urlencoded({ extended: true });
 
 const messageController = app => {
   app.get("/", urlencodedParser, (req, res) => {
-    res.render("message", { messages: data });
+    res.render("message", { messages: conv });
   });
 
   app.post("/", urlencodedParser, (req, res) => {
-    data.push(req.body);
+    conv.push(req.body);
 
-    if (data.length == 2) {
-      data.push({ message: `Hi ${req.body.answer}, do you own trucks?` });
+    if (conv.length == 2) {
+      data.name = req.body.answer;
+      conv.push({ message: `Hi ${data.name}, do you own trucks?` });
     }
 
     // Ask for total trucks
-    if (data.length > 3) {
+    if (
+      conv[conv.length - 2].message == `Hi ${data.name}, do you own trucks?` ||
+      conv[conv.length - 2].message ==
+        "Sorry I don't understand. Do you own trucks?"
+    ) {
       if (
-        !data.filter(e => e.message === "How many trucks do you own?").length >
+        !conv.filter(e => e.message === "How many trucks do you own?").length >
         0
       ) {
         if (req.body.answer == "yes") {
-          data.push({ message: "How many trucks do you own?" });
+          conv.push({ message: "How many trucks do you own?" });
         } else if (req.body.answer == "no") {
-          data.push({ message: "When you get some trucks, let us know!" });
+          conv.push({ message: "When you get some trucks, let us know!" });
         } else {
-          data.push({
+          conv.push({
             message: "Sorry I don't understand. Do you own trucks?"
           });
         }
       }
     }
 
-    // Ask if Monobrand or multiple Brands
+    // Ask if Monobrand or Multiple Brands
     if (
-      data.filter(e => e.message === "How many trucks do you own?").length > 0
+      conv.filter(e => e.message === "How many trucks do you own?").length > 0
     ) {
       if (
-        !data.filter(e => e.message === "Are they the same brand?").length > 0
+        !conv.filter(e => e.message === "Are they the same brand?").length > 0
       ) {
-        if (data[data.length - 1].message !== "How many trucks do you own?") {
-          data.push({ message: "Are they the same brand?" });
+        if (conv[conv.length - 1].message !== "How many trucks do you own?") {
+          data.numOfTrucks = req.body.answer;
+          conv.push({ message: "Are they the same brand?" });
         }
       }
     }
 
     // Path division based on brands
-    if (data.filter(e => e.message === "Are they the same brand?").length > 0) {
-      if (data[data.length - 2].message == "Are they the same brand?") {
+    if (conv.filter(e => e.message === "Are they the same brand?").length > 0) {
+      if (conv[conv.length - 2].message == "Are they the same brand?") {
         if (req.body.answer == "yes") {
-          data.push({ message: "Which brand do you have?" });
+          data.monoBrand = true;
+          conv.push({ message: "Which brand do you have?" });
         } else if (req.body.answer == "no") {
-          data.push({ message: "What brands are they?" });
+          data.monoBrand = false;
+          data.multiBrand = true;
+          conv.push({ message: "What brands are they?" });
         }
       }
     }
 
     // SINGULAR BRAND
-    if (data[data.length - 2].message == "Which brand do you have?") {
-      data.push({
-        message: `Are the ${req.body.answer} trucks of the same model?`
+    if (conv[conv.length - 2].message == "Which brand do you have?") {
+      brand = req.body.answer;
+      conv.push({
+        message: `Are the ${brand} trucks of the same model?`
       });
     }
 
+    // @TODO ASSIGN VARYING BRANDS ROUTE
+
     // Singular Model
-    if (data.filter(e => e.message === "Which brand do you have?").length > 0) {
-      if (data[data.length - 1].answer == "yes") {
-        data.push({
+    if (
+      conv[conv.length - 2].message ==
+      `Are the ${brand} trucks of the same model?`
+    ) {
+      if (conv[conv.length - 1].answer == "yes") {
+        conv.push({
           message: "Which model are they?"
         });
       }
     }
 
-    if (data[data.length - 2].message == "Which model are they?") {
-      data.push({
-        message: "What is the engine size?"
-      });
-    }
-
-    if (data[data.length - 2].message == "What is the engine size?") {
-      data.push({
-        message: "How many axles do they have?"
-      });
-    }
-
     // Multiple Models
-    if (data.filter(e => e.message === "Which brand do you have?").length > 0) {
-      if (data[data.length - 1].answer == "no") {
-        data.push({
+    if (
+      conv[conv.length - 2].message ==
+      `Are the ${brand} trucks of the same model?`
+    ) {
+      if (conv[conv.length - 1].answer == "no") {
+        conv.push({
           message: "Which models are they?"
         });
       }
     }
 
-    if (data.filter(e => e.message === "Which brand do you have?").length > 0) {
-      if (data[data.length - 2].message === "Which models are they?") {
-        const answer = req.body.answer;
-        const answerKey = answer.replace(" and ", " ");
-        const answerSplit = answerKey.split(" ");
-
-        data.push(`How many ${answerSplit[0]} trucks do you have?`);
-      }
+    if (conv[conv.length - 2].message == `Which models are they?`) {
+      const answer = req.body.answer;
+      const answerKey = answer.replace(" and ", " ");
+      const answerSplit = answerKey.split(" ");
+      // @TODO ASSIGN VARYING MODEL ROUTES
+      conv.push({ message: `How many ${answerSplit[0]} trucks do you have?` });
     }
 
-    res.json(data);
+    // Engine size
+    if (conv[conv.length - 2].message == "Which model are they?") {
+      model = req.body.answer;
+      conv.push({
+        message: "What is the engine size?"
+      });
+    }
+
+    // Number of axles
+    if (conv[conv.length - 2].message == "What is the engine size?") {
+      engineSize = req.body.answer;
+      conv.push({
+        message: "How many axles do they have?"
+      });
+    }
+
+    // How many of this particular truck
+    if (conv[conv.length - 2].message == "How many axles do they have?") {
+      axles = req.body.answer;
+      conv.push({
+        message: "How many of this particular truck do you have?"
+      });
+    }
+
+    // Confirmation
+    if (
+      conv[conv.length - 2].message ==
+      "How many of this particular truck do you have?"
+    ) {
+      num = req.body.answer;
+      data.brands.push({
+        brand,
+        models: [{ model, num, engineSize, axles }]
+      });
+
+      conv.push({
+        message:
+          "Great, these details have been saved. Do you have more trucks to add?"
+      });
+    }
+
+    res.json(conv);
   });
 };
 
 module.exports = {
   messageController,
-  data
+  conv
 };

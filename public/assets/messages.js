@@ -1,7 +1,12 @@
 $(document).ready(function() {
   $("form").on("submit", function() {
     var message = $("#input");
-    var messages = { answer: message.val().toLowerCase() };
+    var messages = {
+      answer: message
+        .val()
+        .toLowerCase()
+        .trim()
+    };
     $.ajax({
       type: "POST",
       url: "/",
