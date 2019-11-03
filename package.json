@@ -1,0 +1,23 @@
+{
+  "name": "chatbot",
+  "version": "1.0.0",
+  "description": "Tracks Chatbot",
+  "main": "app.js",
+  "scripts": {
+    "start": "node server.js",
+    "server": "nodemon server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "ejs": "^2.7.1",
+    "express": "^4.17.1",
+    "jsdom": "^15.2.0"
+  },
+  "devDependencies": {
+    "concurrently": "^5.0.0",
+    "nodemon": "^1.19.4"
+  }
+}

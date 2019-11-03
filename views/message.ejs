@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <script
+      src="https://code.jquery.com/jquery-3.2.1.min.js"
+      integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+      crossorigin="anonymous"
+    ></script>
+    <link rel="stylesheet" href="/assets/styles.css" type="text/css" />
+    <title>Messages</title>
+  </head>
+  <body>
+    <div id="message-table">
+      <ul>
+        <% for(var i=0; i < messages.length; i++){ if( i % 2 == 0){ %>
+        <li class="question"><%=messages[i].message%></li>
+        <% }else{ %>
+        <li class="answer"><%=messages[i].answer%></li>
+        <% } } %>
+      </ul>
+      <form>
+        <textarea
+          type="text"
+          name="message"
+          placeholder="Enter reply..."
+          required
+          id="input"
+        ></textarea>
+        <button type="submit">Send</button>
+      </form>
+    </div>
+
+    <script src="/assets/messages.js"></script>
+  </body>
+</html>
