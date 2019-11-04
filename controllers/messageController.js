@@ -1,5 +1,7 @@
 const bodyParser = require("body-parser");
 
+let urlencodedParser = bodyParser.urlencoded({ extended: true });
+
 let conv = [
   {
     message: "hello, what's your name?"
@@ -14,13 +16,15 @@ let data = {
       brand: "volvo",
       models: [
         { model: "rx24", num: "2", engineSize: "3litres", axles: "2" },
-        { model: "444", num: "3", engineSize: "2000litres", axles: "30" }
+        { model: "444", num: "3", engineSize: "4litres", axles: "5" }
       ]
     }
   ],
   monoBrand: true,
   multiBrand: false
 };
+
+let models = { model0: "vr 2210", model1: "rx 5200" };
 
 let brand;
 let model;
@@ -35,8 +39,6 @@ let axles;
 // data.brands[0].models[0].engineSize //first model engine size
 //data.brands[0].models[1] second model
 
-let urlencodedParser = bodyParser.urlencoded({ extended: true });
-
 const messageController = app => {
   app.get("/", urlencodedParser, (req, res) => {
     res.render("message", { messages: conv });
@@ -44,6 +46,14 @@ const messageController = app => {
 
   app.post("/", urlencodedParser, (req, res) => {
     conv.push(req.body);
+
+    // Testing multiple model structure
+    // console.log(Object.values(models));
+    // modelsArr = Object.values(models);
+    // for (let i = 0; i < modelsArr.length; i++) {
+    //   const element = array[i];
+
+    // }
 
     if (conv.length == 2) {
       data.name = req.body.answer;
@@ -139,7 +149,12 @@ const messageController = app => {
       const answerKey = answer.replace(" and ", " ");
       const answerSplit = answerKey.split(" ");
       // @TODO ASSIGN VARYING MODEL ROUTES
-      conv.push({ message: `How many ${answerSplit[0]} trucks do you have?` });
+      for (let i = 0; i < answerSplit.length; i++) {
+        models["model" + i] = answerSplit[i];
+      }
+      console.group(models);
+
+      conv.push({ message: `How many ${models[0]} trucks do you have?` });
     }
 
     // Engine size
