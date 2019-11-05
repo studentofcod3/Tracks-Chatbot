@@ -23,6 +23,8 @@ let brandsArr = [];
 let brand;
 let model;
 let num;
+let numBrand;
+let numModel;
 let engineSize;
 let axles;
 
@@ -59,7 +61,20 @@ const messageController = app => {
           ans == "yah" ||
           ans == "yeah" ||
           ans == "ye" ||
-          ans == "yea"
+          ans == "yea" ||
+          ans == "sure" ||
+          ans == "indeed" ||
+          ans == "of course" ||
+          ans == "certainly" ||
+          ans == "absolutely" ||
+          ans == "affirmative" ||
+          ans == "aye" ||
+          ans == "yep" ||
+          ans == "roger" ||
+          ans == "uh-huh" ||
+          ans == "surely" ||
+          ans == "positive" ||
+          ans == "most certainly"
         ) {
           conv.push({ message: "How many trucks do you own?" });
         } else if (
@@ -68,7 +83,18 @@ const messageController = app => {
           ans == "nein" ||
           ans == "nah" ||
           ans == "nope" ||
-          ans == "ne"
+          ans == "ne" ||
+          ans == "by no means" ||
+          ans == "not at all" ||
+          ans == "negative" ||
+          ans == "never" ||
+          ans == "nae" ||
+          ans == "naw" ||
+          ans == "nay" ||
+          ans == "absolutely not" ||
+          ans == "most certainly not" ||
+          ans == "ofcourse not" ||
+          ans == "under no circumstances"
         ) {
           conv.push({ message: "When you get some trucks, let us know!" });
         } else {
@@ -82,11 +108,22 @@ const messageController = app => {
     // Ask if Monobrand or Multiple Brands
     if (conv[conv.length - 2].message == "How many trucks do you own?") {
       data.numOfTrucks = req.body.answer;
-      conv.push({ message: "Are they the same brand?" });
+      if (data.numOfTrucks == "1" || data.numOfTrucks == "one") {
+        num = "1";
+        conv.push({ message: "Which brand do you have?" });
+      } else if (data.numOfTrucks == "0" || data.numOfTrucks == "zero") {
+        conv.push({ message: "When you get some trucks, let us know!" });
+      } else {
+        conv.push({ message: "Are they the same brand?" });
+      }
     }
 
     // Path division based on brands
-    if (conv[conv.length - 2].message == "Are they the same brand?") {
+    if (
+      conv[conv.length - 2].message == "Are they the same brand?" ||
+      conv[conv.length - 2].message ==
+        "Sorry I don't understand. Are they the same brand?"
+    ) {
       let ans = req.body.answer;
       if (
         ans == "yes" ||
@@ -97,7 +134,20 @@ const messageController = app => {
         ans == "yah" ||
         ans == "yeah" ||
         ans == "ye" ||
-        ans == "yea"
+        ans == "yea" ||
+        ans == "sure" ||
+        ans == "indeed" ||
+        ans == "of course" ||
+        ans == "certainly" ||
+        ans == "absolutely" ||
+        ans == "affirmative" ||
+        ans == "aye" ||
+        ans == "yep" ||
+        ans == "roger" ||
+        ans == "uh-huh" ||
+        ans == "surely" ||
+        ans == "positive" ||
+        ans == "most certainly"
       ) {
         data.monoBrand = true;
         conv.push({ message: "Which brand do you have?" });
@@ -107,17 +157,35 @@ const messageController = app => {
         ans == "nein" ||
         ans == "nah" ||
         ans == "nope" ||
-        ans == "ne"
+        ans == "ne" ||
+        ans == "by no means" ||
+        ans == "not at all" ||
+        ans == "negative" ||
+        ans == "never" ||
+        ans == "nae" ||
+        ans == "naw" ||
+        ans == "nay" ||
+        ans == "absolutely not" ||
+        ans == "most certainly not" ||
+        ans == "ofcourse not" ||
+        ans == "under no circumstances"
       ) {
         data.monoBrand = false;
         data.multiBrand = true;
         conv.push({ message: "What brands are they?" });
+      } else {
+        conv.push({
+          message: "Sorry I don't understand. Are they the same brand?"
+        });
       }
     }
 
     // SINGULAR BRAND
     if (conv[conv.length - 2].message == "Which brand do you have?") {
       brand = req.body.answer;
+      if (num == "1" || num == "one" || numBrand == "1" || numBrand == "one") {
+        conv.push({ message: "Which model is it?" });
+      }
       conv.push({
         message: `Are the ${brand} trucks of the same model?`
       });
@@ -141,15 +209,22 @@ const messageController = app => {
     if (
       conv[conv.length - 2].message == `How many ${brand} trucks do you have?`
     ) {
-      conv.push({
-        message: `Are the ${brand} trucks of the same model?`
-      });
+      const ans = conv[conv.length - 1].answer;
+      if (ans == "1" || ans == "one") {
+        conv.push({ message: "Which model is it?" });
+      } else {
+        conv.push({
+          message: `Are the ${brand} trucks of the same model?`
+        });
+      }
     }
 
-    // Singular Model
+    // Models question
     if (
       conv[conv.length - 2].message ==
-      `Are the ${brand} trucks of the same model?`
+        `Are the ${brand} trucks of the same model?` ||
+      conv[conv.length - 2].message ==
+        `Sorry I don't understand. Are the ${brand} trucks of the same model?`
     ) {
       let ans = req.body.answer;
       if (
@@ -161,30 +236,49 @@ const messageController = app => {
         ans == "yah" ||
         ans == "yeah" ||
         ans == "ye" ||
-        ans == "yea"
+        ans == "yea" ||
+        ans == "sure" ||
+        ans == "indeed" ||
+        ans == "of course" ||
+        ans == "certainly" ||
+        ans == "absolutely" ||
+        ans == "affirmative" ||
+        ans == "aye" ||
+        ans == "yep" ||
+        ans == "roger" ||
+        ans == "uh-huh" ||
+        ans == "surely" ||
+        ans == "positive" ||
+        ans == "most certainly"
       ) {
         conv.push({
           message: "Which model are they?"
         });
-      }
-    }
-
-    // Multiple Models question
-    if (
-      conv[conv.length - 2].message ==
-      `Are the ${brand} trucks of the same model?`
-    ) {
-      let ans = conv[conv.length - 1].answer;
-      if (
+      } else if (
         ans == "no" ||
         ans == "n" ||
         ans == "nein" ||
         ans == "nah" ||
         ans == "nope" ||
-        ans == "ne"
+        ans == "ne" ||
+        ans == "by no means" ||
+        ans == "not at all" ||
+        ans == "negative" ||
+        ans == "never" ||
+        ans == "nae" ||
+        ans == "naw" ||
+        ans == "nay" ||
+        ans == "absolutely not" ||
+        ans == "most certainly not" ||
+        ans == "ofcourse not" ||
+        ans == "under no circumstances"
       ) {
         conv.push({
           message: "Which models are they?"
+        });
+      } else {
+        conv.push({
+          message: `Sorry I don't understand. Are the ${brand} trucks of the same model?`
         });
       }
     }
@@ -207,13 +301,22 @@ const messageController = app => {
     // Engine size
     if (
       conv[conv.length - 2].message == "Which model are they?" ||
-      conv[conv.length - 2].message == `How many ${model} trucks do you have?`
+      conv[conv.length - 2].message ==
+        `How many ${model} trucks do you have?` ||
+      conv[conv.length - 2].message == "Which model is it?"
     ) {
       let prevQues = conv[conv.length - 2].message;
-      if (prevQues == "Which model are they?") {
+      if (
+        prevQues == "Which model are they?" ||
+        prevQues == "Which model is it?"
+      ) {
         model = req.body.answer;
       } else if (prevQues == `How many ${model} trucks do you have?`) {
-        num = req.body.answer;
+        numModel = req.body.answer;
+      }
+
+      if (prevQues == "Which model is it?") {
+        numModel = "1";
       }
 
       conv.push({
@@ -224,13 +327,29 @@ const messageController = app => {
     // Number of axles
     if (conv[conv.length - 2].message == "What is the engine size?") {
       engineSize = req.body.answer;
-      conv.push({
-        message: "How many axles do they have?"
-      });
+      if (
+        data.numOfTrucks == "1" ||
+        data.numOfTrucks == "one" ||
+        numBrand == "1" ||
+        numBrand == "one" ||
+        numModel == "1" ||
+        numModel == "one"
+      ) {
+        conv.push({
+          message: "How many axles does it have?"
+        });
+      } else {
+        conv.push({
+          message: "How many axles do they have?"
+        });
+      }
     }
 
     // Save particular truck
-    if (conv[conv.length - 2].message == "How many axles do they have?") {
+    if (
+      conv[conv.length - 2].message == "How many axles do they have?" ||
+      conv[conv.length - 2].message == "How many axles does it have?"
+    ) {
       axles = req.body.answer;
       data.brands.push({
         truck: [{ brand, model, num, engineSize, axles }]
