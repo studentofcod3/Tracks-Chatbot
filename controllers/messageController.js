@@ -1,4 +1,5 @@
 const bodyParser = require("body-parser");
+const fs = require("fs");
 
 let urlencodedParser = bodyParser.urlencoded({ extended: true });
 
@@ -11,20 +12,11 @@ let conv = [
 let data = {
   name: "",
   numOfTrucks: "",
-  brands: [
-    {
-      brand: "volvo",
-      models: [
-        { model: "rx24", num: "2", engineSize: "3litres", axles: "2" },
-        { model: "444", num: "3", engineSize: "4litres", axles: "5" }
-      ]
-    }
-  ],
   monoBrand: true,
-  multiBrand: false
+  multiBrand: false,
+  brands: []
 };
 
-let models = { model0: "vr 2210", model1: "rx 5200" };
 let modelsArr = [];
 let brandsArr = [];
 
@@ -217,7 +209,13 @@ const messageController = app => {
       conv[conv.length - 2].message == "Which model are they?" ||
       conv[conv.length - 2].message == `How many ${model} trucks do you have?`
     ) {
-      model = req.body.answer;
+      let prevQues = conv[conv.length - 2].message;
+      if (prevQues == "Which model are they?") {
+        model = req.body.answer;
+      } else if (prevQues == `How many ${model} trucks do you have?`) {
+        num = req.body.answer;
+      }
+
       conv.push({
         message: "What is the engine size?"
       });
@@ -231,23 +229,11 @@ const messageController = app => {
       });
     }
 
-    // How many of this particular truck
+    // Save particular truck
     if (conv[conv.length - 2].message == "How many axles do they have?") {
       axles = req.body.answer;
-      conv.push({
-        message: "How many of this particular truck do you have?"
-      });
-    }
-
-    // Save particular truck
-    if (
-      conv[conv.length - 2].message ==
-      "How many of this particular truck do you have?"
-    ) {
-      num = req.body.answer;
       data.brands.push({
-        brand,
-        models: [{ model, num, engineSize, axles }]
+        truck: [{ brand, model, num, engineSize, axles }]
       });
 
       if (modelsArr.length > 0) {
@@ -255,7 +241,25 @@ const messageController = app => {
         conv.push({ message: `How many ${model} trucks do you have?` });
         model = modelsArr[0];
         modelsArr.shift();
-      } else if (modelsArr.length == 0) {
+      } else if (brandsArr.length > 0) {
+        brand = brandsArr[0];
+        conv.push({ message: `How many ${brand} trucks do you have?` });
+        brandsArr.shift();
+      } else if (modelsArr.length == 0 && brandsArr.length == 0) {
+        const dataDir = "data";
+        const dataDirLength = fs.readdirSync(dataDir).length;
+        const dataFileName = `data/data${dataDirLength}.json`;
+        fs.writeFileSync(dataFileName, JSON.stringify(data), err => {
+          if (err) throw err;
+        });
+
+        const convDir = "conversations";
+        const convDirLength = fs.readdirSync(convDir).length;
+        const convFileName = `conversations/conv${convDirLength}.json`;
+        fs.writeFileSync(convFileName, JSON.stringify(conv), err => {
+          if (err) throw err;
+        });
+
         conv.push({
           message: "Great, these details have been saved"
         });

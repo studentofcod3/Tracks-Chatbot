@@ -31,3 +31,7 @@ $(document).ready(function() {
     return false;
   });
 });
+
+const messagesArea = document.querySelector("ul");
+
+messagesArea.scrollTop = messagesArea.scrollHeight;
