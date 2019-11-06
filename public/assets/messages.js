@@ -13,7 +13,7 @@ $(document).ready(function() {
         .trim()
     };
     var messagesNum = {
-      answer: messageNum.val()
+      answer: Number(messageNum.val())
     };
 
     if (inputNum.style.display == "none") {
