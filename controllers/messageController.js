@@ -362,13 +362,13 @@ const messageController = app => {
       }
 
       conv.push({
-        message: "What is the engine size?"
+        message: "What is the engine size in litres?"
       });
     }
 
     // Number of axles
     if (
-      conv[conv.length - 2].message == "What is the engine size?" ||
+      conv[conv.length - 2].message == "What is the engine size in litres?" ||
       conv[conv.length - 2].message ==
         `What is the ${model} truck's engine size?`
     ) {
