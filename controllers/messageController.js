@@ -201,10 +201,11 @@ const messageController = app => {
       brand = req.body.answer;
       if (num == 1 || numBrand == 1) {
         conv.push({ message: "Which model is it?" });
+      } else {
+        conv.push({
+          message: `Are the ${brand} trucks of the same model?`
+        });
       }
-      conv.push({
-        message: `Are the ${brand} trucks of the same model?`
-      });
     }
 
     // Multiple Brands sorting
