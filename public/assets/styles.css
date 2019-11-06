@@ -23,7 +23,7 @@ body{
   width: 100%;
 }
 
-textarea[type="text"]{
+#input{
   width: 70%;
   resize: none;
   padding: 20px;
@@ -33,9 +33,22 @@ textarea[type="text"]{
   color: #989898;
 }
 
-textarea:focus{
+#input:focus, #inputNum:focus{
   outline: none;
 }
+
+#inputNum{
+  display: none;
+  width: 70%;
+  resize: none;
+  padding: 20px;
+  background:#181c22;
+  border: 0;
+  font-size: 20px;
+  color: #989898;
+}
+
+
 
 button{
   padding: 20px;

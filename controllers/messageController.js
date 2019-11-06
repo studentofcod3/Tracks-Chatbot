@@ -65,6 +65,9 @@ const messageController = app => {
           ans == "sure" ||
           ans == "indeed" ||
           ans == "of course" ||
+          ans == "ofcourse" ||
+          ans == "ofc" ||
+          ans == "obviously" ||
           ans == "certainly" ||
           ans == "absolutely" ||
           ans == "affirmative" ||
@@ -74,7 +77,8 @@ const messageController = app => {
           ans == "uh-huh" ||
           ans == "surely" ||
           ans == "positive" ||
-          ans == "most certainly"
+          ans == "most certainly" ||
+          ans == "clearly"
         ) {
           conv.push({ message: "How many trucks do you own?" });
         } else if (
@@ -94,7 +98,11 @@ const messageController = app => {
           ans == "absolutely not" ||
           ans == "most certainly not" ||
           ans == "ofcourse not" ||
-          ans == "under no circumstances"
+          ans == "of course not" ||
+          ans == "ofc not" ||
+          ans == "obviously not" ||
+          ans == "under no circumstances" ||
+          ans == "clearly not"
         ) {
           conv.push({ message: "When you get some trucks, let us know!" });
         } else {
@@ -138,6 +146,9 @@ const messageController = app => {
         ans == "sure" ||
         ans == "indeed" ||
         ans == "of course" ||
+        ans == "ofcourse" ||
+        ans == "ofc" ||
+        ans == "obviously" ||
         ans == "certainly" ||
         ans == "absolutely" ||
         ans == "affirmative" ||
@@ -147,7 +158,8 @@ const messageController = app => {
         ans == "uh-huh" ||
         ans == "surely" ||
         ans == "positive" ||
-        ans == "most certainly"
+        ans == "most certainly" ||
+        ans == "clearly"
       ) {
         data.monoBrand = true;
         conv.push({ message: "Which brand do you have?" });
@@ -168,7 +180,11 @@ const messageController = app => {
         ans == "absolutely not" ||
         ans == "most certainly not" ||
         ans == "ofcourse not" ||
-        ans == "under no circumstances"
+        ans == "of course not" ||
+        ans == "ofc not" ||
+        ans == "obviously not" ||
+        ans == "under no circumstances" ||
+        ans == "clearly not"
       ) {
         data.monoBrand = false;
         data.multiBrand = true;
@@ -240,6 +256,9 @@ const messageController = app => {
         ans == "sure" ||
         ans == "indeed" ||
         ans == "of course" ||
+        ans == "ofcourse" ||
+        ans == "ofc" ||
+        ans == "obviously" ||
         ans == "certainly" ||
         ans == "absolutely" ||
         ans == "affirmative" ||
@@ -249,7 +268,8 @@ const messageController = app => {
         ans == "uh-huh" ||
         ans == "surely" ||
         ans == "positive" ||
-        ans == "most certainly"
+        ans == "most certainly" ||
+        ans == "clearly"
       ) {
         conv.push({
           message: "Which model are they?"
@@ -271,7 +291,11 @@ const messageController = app => {
         ans == "absolutely not" ||
         ans == "most certainly not" ||
         ans == "ofcourse not" ||
-        ans == "under no circumstances"
+        ans == "of course not" ||
+        ans == "ofc not" ||
+        ans == "obviously not" ||
+        ans == "under no circumstances" ||
+        ans == "clearly not"
       ) {
         conv.push({
           message: "Which models are they?"
